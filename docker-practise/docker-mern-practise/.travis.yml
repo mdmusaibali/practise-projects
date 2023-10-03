@@ -1,0 +1,22 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t mdmusaibali/docker-full-stack-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true mdmusaibali/docker-full-stack-test npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-south-1"
+  app: "docker-full-stack-test"
+  env: "Dockerfullstacktest-env"
+  bucker_name: "elasticbeanstalk-ap-south-1-370854809954"
+  bucker_path: "docker-full-stack-test"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
